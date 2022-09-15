@@ -1,0 +1,8 @@
+QStatusBar {
+    background: gray;
+}
+
+QStatusBar::item {
+    color: red;
+}
+

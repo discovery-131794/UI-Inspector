@@ -1,0 +1,15 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>icons/check.png</file>
+    <file>icons/close.png</file>
+    <file>icons/copy.png</file>
+    <file>icons/highlight.png</file>
+    <file>icons/locate.png</file>
+    <file>icons/magnifier.png</file>
+    <file>icons/maximize.png</file>
+    <file>icons/minimize.png</file>
+    <file>icons/options.png</file>
+    <file>icons/refresh.png</file>
+    <file>icons/restore.png</file>
+</qresource>
+</RCC>
