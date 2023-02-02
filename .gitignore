@@ -1,7 +1,6 @@
 __pycache__/
 .vscode/
+env/
 build/
 dist/
 @AutomationLog.txt
-app.spec
-test.py
