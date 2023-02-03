@@ -524,7 +524,7 @@ class MainWindow(QtWidgets.QMainWindow):
         hwnd = GetAncestor(hwnd, GA_ROOT)
         try:
             jdriver = JDriver(hwnd = hwnd)
-        except RuntimeError:
+        except (FileNotFoundError, RuntimeError):
             control = auto.ControlFromPoint(x, y)
         else:
             control = jdriver.get_accessible_context_at(x, y)
