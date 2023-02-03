@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='uiinspector',
     version='1.0.0',
+    description='GUI tool for capturing windows ui element',
     packages=find_packages(
         include=['uiinspector*']
     ),
