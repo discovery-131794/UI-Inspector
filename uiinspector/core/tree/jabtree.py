@@ -3,8 +3,8 @@ from collections import deque
 from ctypes import byref
 import re
 from typing import Dict, List, Mapping, Tuple
-from common.exceptions import ParseSelectorError
-from core.pyjab import JDriver, JElement
+from ...common.exceptions import ParseSelectorError
+from ..pyjab import JDriver, JElement
 from pyjab.accessibleinfo import AccessibleActions
 from ..base import PropertyTableModel, UITreeItem
 from PySide6 import QtWidgets, QtCore

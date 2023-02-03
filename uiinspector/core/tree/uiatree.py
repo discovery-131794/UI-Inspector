@@ -7,9 +7,9 @@ from PySide6.QtWidgets import QTreeWidgetItem
 from PySide6.QtCore import QAbstractTableModel
 from uiautomation import Control, PatternIdNames, PatternId
 from win32con import *
-from common.exceptions import ParseSelectorError
-from win32.functions import *
-from win32.structures import *
+from ...common.exceptions import ParseSelectorError
+from ...win32.functions import *
+from ...win32.structures import *
 from ..base import PropertyTableModel, UITreeItem
 
 class UIAPropertyTableModel(PropertyTableModel):

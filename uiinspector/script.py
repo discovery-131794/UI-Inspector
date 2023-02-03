@@ -16,7 +16,7 @@ import sys, os
 import mouse, keyboard
 import win32gui, win32api
 import comtypes
-import icons
+from . import icons
 from typing import Tuple, cast
 
 def to_tuple(rect: Rect|None) -> Tuple[int, int, int, int]:
@@ -644,13 +644,4 @@ def run():
             
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication()
-
-    window = MainWindow()
-    window.show()
-
-    with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
-        _style = f.read()
-        app.setStyleSheet(_style)
-
-    sys.exit(app.exec())
+    run()
