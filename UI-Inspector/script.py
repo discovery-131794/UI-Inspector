@@ -6,13 +6,13 @@ from uiautomation import Control, Rect
 import uiautomation as auto
 from win32api import GetSystemMetrics
 from win32con import *
-from core.pyjab import JDriver, JABException, JElement
-from core.tree.jabtree import JABSelectorHelper, JABTreeItem
-from core.tree.uiatree import UIASelectorHelper, UIATreeItem
-from win32.functions import *
-from win32.structures import *
-from core.base import UITreeItem
-import sys
+from .core.pyjab import JDriver, JABException, JElement
+from .core.tree.jabtree import JABSelectorHelper, JABTreeItem
+from .core.tree.uiatree import UIASelectorHelper, UIATreeItem
+from .win32.functions import *
+from .win32.structures import *
+from .core.base import UITreeItem
+import sys, os
 import mouse, keyboard
 import win32gui, win32api
 import comtypes
@@ -628,6 +628,19 @@ class MainWindow(QtWidgets.QMainWindow):
             except Exception as e:
                 self.statusbar.showMessage(str(e), 5000)
                 self.highlight_action.setChecked(False)
+
+
+def run():
+    app = QtWidgets.QApplication()
+
+    window = MainWindow()
+    window.show()
+
+    with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
+        _style = f.read()
+        app.setStyleSheet(_style)
+
+    sys.exit(app.exec())
             
 
 if __name__ == "__main__":
@@ -636,7 +649,7 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
 
-    with open('style.qss', 'r') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
         _style = f.read()
         app.setStyleSheet(_style)
 
