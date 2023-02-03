@@ -6,17 +6,16 @@ from uiautomation import Control, Rect
 import uiautomation as auto
 from win32api import GetSystemMetrics
 from win32con import *
-from core.pyjab import JDriver, JABException, JElement
-from core.tree.jabtree import JABSelectorHelper, JABTreeItem
-from core.tree.uiatree import UIASelectorHelper, UIATreeItem
-from win32.functions import *
-from win32.structures import *
-from core.base import UITreeItem
+from UI-Inspector.core.pyjab import JDriver, JABException, JElement
+from UI-Inspector.core.tree.jabtree import JABSelectorHelper, JABTreeItem
+from UI-Inspector.core.tree.uiatree import UIASelectorHelper, UIATreeItem
+from UI-Inspector.win32.functions import *
+from UI-Inspector.win32.structures import *
+from UI-Inspector.core.base import UITreeItem
 import sys, os
 import mouse, keyboard
 import win32gui, win32api
 import comtypes
-import icons
 from typing import Tuple, cast
 
 def to_tuple(rect: Rect|None) -> Tuple[int, int, int, int]:
@@ -636,7 +635,7 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
 
-    with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
+    with open('UI-Inspector/style.qss', 'r') as f:
         _style = f.read()
         app.setStyleSheet(_style)
 
