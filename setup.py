@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from uiinspector.uiinspector import VERSION
+from uiinspector import VERSION
 
 setup(
     name='uiinspector',

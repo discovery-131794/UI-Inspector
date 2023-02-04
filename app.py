@@ -17,7 +17,7 @@ import mouse, keyboard
 import win32gui, win32api
 import comtypes
 import uiinspector.icons
-from uiinspector.uiinspector import VERSION
+from uiinspector import *
 from typing import Tuple, cast
 
 def to_tuple(rect: Rect|None) -> Tuple[int, int, int, int]:
@@ -438,8 +438,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_detail(self):
         info = f"""
         Version: {VERSION}
-        Author: discovery
-        Contact: discovery131794@163.com
+        Author: {AUTHOR}
+        Contact: {MAIL}
         """
         QtWidgets.QMessageBox.information(self, 'UI Inspector', info)
 

@@ -18,8 +18,8 @@ import win32gui, win32api
 import comtypes
 from . import icons
 from typing import Tuple, cast
+from . import *
 
-VERSION = '1.0.0'
 
 def to_tuple(rect: Rect|None) -> Tuple[int, int, int, int]:
     if isinstance(rect, Rect):
@@ -439,8 +439,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_detail(self):
         info = f"""
         Version: {VERSION}
-        Author: discovery
-        Contact: discovery131794@163.com
+        Author: {AUTHOR}
+        Contact: {MAIL}
         """
         QtWidgets.QMessageBox.information(self, 'UI Inspector', info)
 
