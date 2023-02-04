@@ -17,6 +17,7 @@ import mouse, keyboard
 import win32gui, win32api
 import comtypes
 import uiinspector.icons
+from uiinspector.uiinspector import VERSION
 from typing import Tuple, cast
 
 def to_tuple(rect: Rect|None) -> Tuple[int, int, int, int]:
@@ -435,8 +436,8 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(3000, lambda : self.copy_btn.setIcon(QtGui.QIcon(QtGui.QPixmap(":/icons/copy.png"))))
 
     def show_detail(self):
-        info = """
-        Version: 1.0.0
+        info = f"""
+        Version: {VERSION}
         Author: discovery
         Contact: discovery131794@163.com
         """

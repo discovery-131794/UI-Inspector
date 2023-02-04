@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from uiinspector.uiinspector import VERSION
 
 setup(
     name='uiinspector',
-    version='1.0.0',
+    version=VERSION,
     description='GUI tool for capturing windows ui element',
     packages=find_packages(
         include=['uiinspector*']
