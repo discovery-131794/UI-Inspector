@@ -8,6 +8,7 @@ a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
+    datas=[('uiinspector/style.qss', './uiinspector')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
