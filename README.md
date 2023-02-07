@@ -34,5 +34,5 @@ UI-Inspector depends on below packages:
 
 ## Usage
 When UI-Inspector application starts, the GUI will be displayed as below:
-![Initial User interface](images/initial.png)
+![Initial User interface](images/Initial.png)
 
