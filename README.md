@@ -41,20 +41,20 @@ After indicating element on desktop, the GUI will be displayed as below:
 
 As you can see, there are several fields on the GUI.
 The left dock consists of three buttons:
-- Refresh (F5), it's used to refresh the whole tree structure once new application opened or application closed.
-- Indicate Element (Ctrl + I), when clicking this button, UI-Inspector window will be minimized and user can choose application element on desktop.
-- Highlight Element (Ctrl + H), click this button to validate the genereated tree structure and code.
+- `Refresh (F5)`, it's used to refresh the whole tree structure once new application opened or application closed.
+- `Indicate Element (Ctrl + I)`, when clicking this button, UI-Inspector window will be minimized and user can choose application element on desktop.
+- `Highlight Element (Ctrl + H)`, click this button to validate the genereated tree structure and code.
 
 The main window of UI-Inspector consists of four fields:
-- Visual Tree, this field will display tree structure of the whole desktop, you can expand it to show children of some element. Click will show property of specified
+- `Visual Tree`, this field will display tree structure of the whole desktop, you can expand it to show children of some element. Click will show property of specified
   element, double-click will show selectors and generated code of specified element.
-- Selectors, this field will display position of some element in the desktop tree structure.
-- Properties, this field will diaplay properties of specified element.
-- Generated Code, this field will show python code UI-Inspector generated for you, the code can be used in automation script to locate element.
+- `Selectors`, this field will display position of some element in the desktop tree structure.
+- `Properties`, this field will diaplay properties of specified element.
+- `Generated Code`, this field will show python code UI-Inspector generated for you, the code can be used in automation script to locate element.
 
 ## Shortcuts
 There are some shortcuts when indicating element:
-- ESC, back to main window of UI-Inspector.
-- F2, into normal mode then back to indicating element mode in 5 seconds. In the period, user can navigate to some hidden controls.
-- Enter, sometimes UI control may disappear when clicking mouse, `enter` can achive the same effect as clicking mouse.
+- `ESC`, back to main window of UI-Inspector.
+- `F2`, into normal mode then back to indicating element mode in 5 seconds. In the period, user can navigate to some hidden controls.
+- `Enter`, sometimes UI control may disappear when clicking mouse, `enter` can achive the same effect as clicking mouse.
 
