@@ -1,7 +1,7 @@
 # UI-Inspector
 
 UI-Inspector is a GUI tool that can be used to view the whole windows desktop UI structure and property of every UI node.
-For python developers who use uiautomation and pyjab to develop automation scripts. Developers can use mouse pointer to choose element they want to check, then UI-Inspector will generate tree structure and corresponding code for specified UI element.
+For python developers who use uiautomation and pyjab to develop automation scripts, they can use mouse pointer to choose element they want to check, then UI-Inspector will generate tree structure and corresponding code for specified UI element.
 Now, UI-Inspector supports most windows desktop applications which implemented uiautomation framework and java applications. In the future, I will try to add XML document support and maybe itegrate selenium to it.
 
 ## Installation
@@ -34,4 +34,5 @@ UI-Inspector depends on below packages:
 
 ## Usage
 When UI-Inspector application starts, the GUI will be displayed as below:
+![Initial User interface](images/initial.png)
 
