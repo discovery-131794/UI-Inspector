@@ -52,3 +52,9 @@ The main window of UI-Inspector consists of four fields:
 - Properties, this field will diaplay properties of specified element.
 - Generated Code, this field will show python code UI-Inspector generated for you, the code can be used in automation script to locate element.
 
+## Shortcuts
+There are some shortcuts when indicating element:
+- ESC, back to main window of UI-Inspector.
+- F2, into normal mode then back to indicating element mode in 5 seconds. In the period, user can navigate to some hidden controls.
+- Enter, sometimes UI control may disappear when clicking mouse, `enter` can achive the same effect as clicking mouse.
+
