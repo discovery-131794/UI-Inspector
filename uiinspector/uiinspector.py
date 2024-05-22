@@ -35,10 +35,6 @@ class ScreenManager:
         self.monitor = (0, 0, GetSystemMetrics(0), GetSystemMetrics(1))
         self.last_rect = None
 
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(200)
-        self.timer.timeout.connect(self.draw_rect)
-
         self.countdown_timer = QtCore.QTimer()
         self.countdown_timer.setInterval(1000)
         self.countdown_timer.timeout.connect(self.show_countdown)
@@ -50,21 +46,26 @@ class ScreenManager:
         mouse.hook(self.on_mouse_click)
         keyboard.hook(self.on_key_down)
         self.enabled = True
-        self.timer.start()
+#        self.timer.start()
         if self.hwnd:
             self.block_input()
         else:
             self.create_window()
+        mouse.hook(self.on_mouse_move)
 
     def close(self):
         # self.window.enable_windows()
-        mouse.unhook(self.on_mouse_click)
+        mouse.unhook_all()
         keyboard.unhook(self.on_key_down)
         self.enabled = False
 
     def on_mouse_click(self, event):
         if isinstance(event, mouse.ButtonEvent):
             self.show_selector()
+
+    def on_mouse_move(self, event):
+        if isinstance(event, mouse.MoveEvent):
+            self.draw_rect()
 
     def on_key_down(self, event: keyboard.KeyboardEvent):
         if event.name == 'f2':
@@ -468,7 +469,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def quit(self):
         self.screen_mgr.close()
-        self.screen_mgr.timer.stop()
         self.screen_mgr.destroy_screen()
         self.restore()
 
@@ -547,7 +547,7 @@ class MainWindow(QtWidgets.QMainWindow):
         show selectors in list widget
         """
         if not item:
-            self.screen_mgr.timer.stop()
+#            self.screen_mgr.timer.stop()
             self.screen_mgr.destroy_screen()
         try:
             control = item.control if item else self.get_control_from_cursor()
