@@ -631,7 +631,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.statusbar.showMessage(str(e), 5000)
                 self.highlight_action.setChecked(False)
 
-
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        event.ignore()
+        self.hide()
 def run():
     app = QtWidgets.QApplication()
 
@@ -641,6 +643,22 @@ def run():
     with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
         _style = f.read()
         app.setStyleSheet(_style)
+
+    tray = QtWidgets.QSystemTrayIcon()
+    tray.setToolTip("A GUI tool to view windows desktop control structure")
+    tray.setIcon(QtGui.QPixmap(":/icons/magnifier.png"))
+    def iconActivated(reason: QtWidgets.QSystemTrayIcon.ActivationReason):
+        if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
+            window.show()
+    tray.activated.connect(iconActivated)
+    tray.show()
+
+    menu = QtWidgets.QMenu()
+    menu.addAction('显示窗口', window.show)
+    menu.addAction('隐藏窗口', window.hide)
+    menu.addSeparator()
+    menu.addAction('退出AutoAnnotation', app.quit)
+    tray.setContextMenu(menu)
 
     sys.exit(app.exec())
             
