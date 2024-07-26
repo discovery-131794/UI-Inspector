@@ -11,6 +11,7 @@ from ...common.exceptions import ParseSelectorError
 from ...win32.functions import *
 from ...win32.structures import *
 from ..base import PropertyTableModel, UITreeItem
+from yapf.yapflib.yapf_api import FormatCode
 
 class UIAPropertyTableModel(PropertyTableModel):
     pass
@@ -195,7 +196,7 @@ class UIASelectorHelper:
 
     def generate_code_from_selectors(self, window):
         window.selector_code_area.clear()
-        code = 'uiautomation\n'
+        code = 'uiautomation'
         depth = 0
         for i in range(window.selector_list.count()):
             item = window.selector_list.item(i)
@@ -210,11 +211,11 @@ class UIASelectorHelper:
                     string += f"{attr}='{value}', "
                 if index is not None:
                     string += f"foundIndex={index}, "
-                string += f"Depth={depth_})\n"
+                string += f"Depth={depth_})"
                 code += string
             else:
                 item.setFont(window.unchecked_font)
-        window.selector_code_area.setPlainText(code)
+        window.selector_code_area.setPlainText(FormatCode(code, style_config='pep8')[0])
         window.copy_btn.setVisible(True)
 
     @staticmethod
