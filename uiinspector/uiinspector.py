@@ -32,7 +32,6 @@ class ScreenManager:
         self.window = window
         self.enabled = False
         self.hwnd = None
-        self.monitor = (0, 0, GetSystemMetrics(0), GetSystemMetrics(1))
         self.last_rect = None
 
         self.countdown_timer = QtCore.QTimer()
@@ -46,7 +45,8 @@ class ScreenManager:
     def start(self):
         self.dc = None
         self.brush = None
-        
+      
+        self.monitor = (0, 0, GetSystemMetrics(win32con.SM_CXVIRTUALSCREEN), GetSystemMetrics(win32con.SM_CYVIRTUALSCREEN))
         mouse.hook(self.on_mouse_click)
         keyboard.hook(self.on_key_down)
         self.enabled = True
@@ -168,9 +168,7 @@ class ScreenManager:
         win32gui.RegisterHotKey(self.hwnd, 1, 0x4000, 0x71) # F2
         win32gui.RegisterHotKey(self.hwnd, 2, 0x4000, 0x1B) # ESC
         win32gui.RegisterHotKey(self.hwnd, 3, 0x4000, 0x0D) # ENTER
-        # brush = win32gui.CreateSolidBrush(win32api.RGB(255, 0, 0))
-        # dc = win32gui.GetDC(self.hwnd)
-        # win32gui.FillRect(dc, self.monitor, brush)
+
         self.block_input()
 
     def destroy_screen(self):
