@@ -13,7 +13,7 @@ setup(
             'ui-inspector = uiinspector.uiinspector:run'
         ]
     },
-    install_requires=['PySide6==6.3.0', 'uiautomation>=2.0.16', 'pyjab>=1.1.5', 'mouse', 'keyboard'],
+    install_requires=['PySide6==6.3.0', 'uiautomation>=2.0.16', 'pyjab>=1.1.5', 'mouse', 'keyboard', 'yapf'],
     include_package_data=True
 )
 
