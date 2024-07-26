@@ -42,7 +42,11 @@ class ScreenManager:
         self.hinst = win32gui.GetModuleHandle(None)
         self.highlight_widget = None # highlight rect
 
+
     def start(self):
+        self.dc = None
+        self.brush = None
+        
         mouse.hook(self.on_mouse_click)
         keyboard.hook(self.on_key_down)
         self.enabled = True
@@ -79,6 +83,7 @@ class ScreenManager:
         if self.enabled:
             self.close()
             self.window.show_selector_signal.emit()
+            self.release()
 
     def delay(self):
         """
@@ -91,6 +96,7 @@ class ScreenManager:
         quit control indication process
         """
         self.window.quit_signal.emit()
+        self.release()
 
     def draw_rect(self):
         control = auto.ControlFromCursor()
@@ -101,7 +107,7 @@ class ScreenManager:
         if self.last_rect and self.last_rect == rect:
             return
         
-        self.invalidate_rect()
+        self.invalidate_rect(self.last_rect)
         self.draw_outline((240, 34, 19), 2, rect)
         self.last_rect = rect
 
@@ -111,7 +117,7 @@ class ScreenManager:
             win32gui.InvalidateRect(self.hwnd, rect, False)
             win32gui.UpdateWindow(self.hwnd)
         else:
-            win32gui.InvalidateRect(self.hwnd, self.monitor, False)
+            win32gui.InvalidateRect(self.hwnd, None, False)
             win32gui.UpdateWindow(self.hwnd)
 
     def prepare_countdown(self):
@@ -145,35 +151,6 @@ class ScreenManager:
             self.start()
 
     def create_window(self):
-        # brush = win32gui.CreateSolidBrush(win32api.RGB(0, 0, 255))
-        # wndcls = WNDCLASSEX()
-        # wndcls.cbSize = sizeof(WNDCLASSEX)
-        # wndcls.style = 0
-        # wndcls.lpfnWndProc = WNDPROC(wnd_proc)
-        # wndcls.cbClsExtra = 0
-        # wndcls.cbWndExtra = 0
-        # wndcls.hInstance = self.hinst
-        # wndcls.hIcon = None
-        # wndcls.hCursor = win32gui.LoadCursor(0, IDC_HAND)
-        # wndcls.hbrBackground = int(brush)
-        # wndcls.lpszMenuName = ''
-        # wndcls.lpszClassName = 'Screen'
-        # wndcls.hIconSm = None
-
-        # RegisterClassEx(wndcls)
-        # self.hwnd = CreateWindowEx(
-        #     WS_EX_TOPMOST | WS_EX_LAYERED,
-        #     'Screen',
-        #     'Screen',
-        #     WS_POPUP | WS_VISIBLE,
-        #     *self.monitor,
-        #     self.window.winId(), None,
-        #     self.hinst, None
-        # )
-
-        # SetLayeredWindowAttributes(self.hwnd, 0, 75, LWA_ALPHA)
-        
-
         self.hwnd = win32gui.CreateWindow(
             'Static', '',
             WS_VISIBLE | WS_POPUP,
@@ -205,35 +182,28 @@ class ScreenManager:
 
     def transfer_input(self):
         win32gui.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_HIDEWINDOW)
-        # win32gui.SetWindowLong(self.hwnd, GWL_EXSTYLE, win32gui.GetWindowLong(self.hwnd, GWL_EXSTYLE) | WS_EX_TRANSPARENT)
-        # win32gui.RedrawWindow(self.hwnd, None, None, RDW_INVALIDATE)
 
     def block_input(self):
         win32gui.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW)
-        # win32gui.SetWindowLong(self.hwnd, GWL_EXSTYLE, win32gui.GetWindowLong(self.hwnd, GWL_EXSTYLE) & (~WS_EX_TRANSPARENT))
-        # win32gui.RedrawWindow(self.hwnd, None, None, RDW_INVALIDATE)
 
     def draw_outline(self, color: Tuple, thickness: int, rect: Rect):
         rect = to_tuple(rect)
-        pen_handle = win32gui.CreatePen(PS_SOLID, thickness, win32api.RGB(*color))
-        log_brush = LOGBRUSH()
-        log_brush.lbStyle = BS_NULL
-        brush_handle = CreateBrushIndirect(log_brush)
-        dc = win32gui.CreateDC('DISPLAY', None, None)
-        win32gui.SelectObject(dc, pen_handle)
-        win32gui.SelectObject(dc, brush_handle)
-        win32gui.Rectangle(dc, *rect)
 
-        win32gui.DeleteObject(pen_handle)
-        win32gui.DeleteObject(brush_handle)
-        win32gui.DeleteDC(dc)
+        self.dc = self.dc or win32gui.CreateDC('DISPLAY', None, None)
+        self.brush = self.brush or win32gui.CreateSolidBrush(win32api.RGB(*color))
+        win32gui.FrameRect(self.dc, rect, self.brush)
+
+    def release(self):
+        win32gui.DeleteObject(self.brush)
+        win32gui.DeleteDC(self.dc)
+        self.dc = None
+        self.brush = None
 
     def highlight(self, rect: Tuple):
         self.highlight_widget = QtWidgets.QWidget()
         self.highlight_widget.setWindowFlags(Qt.ToolTip)
         self.highlight_widget.setStyleSheet("background-color: rgb(49, 120, 192); border: 2px solid yellow")
         self.highlight_widget.setWindowOpacity(0.5)
-        # self.highlight_widget.setGeometry(rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top)
         self.highlight_widget.show()
         win32gui.SetWindowPos(
             self.highlight_widget.winId(), 
@@ -461,7 +431,6 @@ class MainWindow(QtWidgets.QMainWindow):
     # manage screen 'delay' and 'quit' event
     def delay(self):
         self.screen_mgr.close()
-        self.screen_mgr.timer.stop()
         self.screen_mgr.invalidate_rect()
         self.screen_mgr.transfer_input()
         # QtCore.QTimer.singleShot(5000, self.screen_mgr.start)
@@ -631,9 +600,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.statusbar.showMessage(str(e), 5000)
                 self.highlight_action.setChecked(False)
 
-    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
-        event.ignore()
-        self.hide()
 def run():
     app = QtWidgets.QApplication()
 
@@ -643,22 +609,6 @@ def run():
     with open(os.path.join(os.path.dirname(__file__), 'style.qss'), 'r') as f:
         _style = f.read()
         app.setStyleSheet(_style)
-
-    tray = QtWidgets.QSystemTrayIcon()
-    tray.setToolTip("A GUI tool to view windows desktop control structure")
-    tray.setIcon(QtGui.QPixmap(":/icons/magnifier.png"))
-    def iconActivated(reason: QtWidgets.QSystemTrayIcon.ActivationReason):
-        if reason == QtWidgets.QSystemTrayIcon.ActivationReason.Trigger:
-            window.show()
-    tray.activated.connect(iconActivated)
-    tray.show()
-
-    menu = QtWidgets.QMenu()
-    menu.addAction('显示窗口', window.show)
-    menu.addAction('隐藏窗口', window.hide)
-    menu.addSeparator()
-    menu.addAction('退出AutoAnnotation', app.quit)
-    tray.setContextMenu(menu)
 
     sys.exit(app.exec())
             
