@@ -9,7 +9,7 @@ setup(
         include=['uiinspector*']
     ),
     entry_points={
-        'gui_scripts': [
+        'console_scripts': [
             'ui-inspector = uiinspector.uiinspector:run'
         ]
     },
