@@ -2,7 +2,7 @@ from __future__ import annotations
 from collections import deque
 import re
 from typing import Dict, List, Mapping, Tuple
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 from PySide6.QtWidgets import QTreeWidgetItem
 from PySide6.QtCore import QAbstractTableModel
 from uiautomation import Control, PatternIdNames, PatternId
@@ -186,8 +186,10 @@ class UIASelectorHelper:
                 list_item.setCheckState(QtCore.Qt.Checked)
                 tree_item.setFont(0, window.checked_font)
                 list_item.setFont(window.checked_font)
+                list_item.setForeground(QtGui.QColor(27, 62, 148))
             else:
                 list_item.setCheckState(QtCore.Qt.Unchecked)
+                list_item.setForeground(QtGui.QColor(0, 0, 0))
 
             window.selector_list.addItem(list_item)
         window.tree.scrollToItem(tree_item, QtWidgets.QAbstractItemView.PositionAtCenter)
@@ -202,6 +204,7 @@ class UIASelectorHelper:
             item = window.selector_list.item(i)
             if item.checkState() == QtCore.Qt.Checked:
                 item.setFont(window.checked_font)
+                item.setForeground(QtGui.QColor(27, 62, 148))
                 control_type, attributes = self.parse_selector(item.text()) # parse selector
                 string = f".{control_type}("
                 depth_ = attributes['Depth'] - depth
@@ -215,6 +218,7 @@ class UIASelectorHelper:
                 code += string
             else:
                 item.setFont(window.unchecked_font)
+                item.setForeground(QtGui.QColor(0, 0, 0))
         window.selector_code_area.setPlainText(FormatCode(code, style_config='pep8')[0])
         window.copy_btn.setVisible(True)
 

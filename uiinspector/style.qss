@@ -1,8 +1,7 @@
 QStatusBar {
-    background: gray;
+    background: #9ab4db;
 }
 
 QStatusBar::item {
     color: red;
 }
-

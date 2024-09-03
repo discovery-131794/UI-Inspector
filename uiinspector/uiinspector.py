@@ -270,7 +270,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.selector_code_area.setReadOnly(True)
         self.selector_code_area.setFrameStyle(QtWidgets.QFrame.NoFrame)
         self.selector_code_area.setFont(QtGui.QFont('Arial', 10))
-        self.selector_code_area.setTextColor(QtGui.QColor(0, 0, 255))
+        self.selector_code_area.setTextColor(QtGui.QColor(27, 62, 148))
 
         self.py_tab = QtWidgets.QWidget()
         self.py_tab.setLayout(QtWidgets.QHBoxLayout())
@@ -325,7 +325,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar.setIconSize(QtCore.QSize(20, 20))
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         # set toolbar background color
-        self.toolbar.setStyleSheet("QToolBar { background: rgba(171, 240, 173, 0.75); spacing: 10px}")
+        self.toolbar.setStyleSheet("QToolBar { background: #9ab4db; spacing: 10px}")
 
         refresh_action = QtGui.QAction(QtGui.QIcon(QtGui.QPixmap(":/icons/refresh.png")), "Refresh", self)
         refresh_action.setShortcut("F5")
@@ -378,7 +378,7 @@ class MainWindow(QtWidgets.QMainWindow):
         option_menu.addActions([self.jab_action, self.uia_action])
         help_menu.addAction(about_action)
 
-        menu.setStyleSheet("background: rgba(171, 240, 173, 0.75);")
+        menu.setStyleSheet("background: #9ab4db;")
 
         
         # set statusbar
