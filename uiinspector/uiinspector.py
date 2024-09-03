@@ -78,8 +78,8 @@ class ScreenManager:
 
     def show_selector(self):
         if self.enabled:
-            self.window.show_selector_signal.emit()
             self.close()
+            self.window.show_selector_signal.emit()
 
     def delay(self):
         """
