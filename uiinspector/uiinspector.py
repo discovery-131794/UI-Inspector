@@ -42,10 +42,7 @@ class ScreenManager:
         self.highlight_widget = None # highlight rect
 
 
-    def start(self):
-        self.dc = None
-        self.brush = None
-      
+    def start(self):  
         self.monitor = (0, 0, GetSystemMetrics(win32con.SM_CXVIRTUALSCREEN), GetSystemMetrics(win32con.SM_CYVIRTUALSCREEN))
         mouse.hook(self.on_mouse_click)
         keyboard.hook(self.on_key_down)
@@ -60,7 +57,7 @@ class ScreenManager:
     def close(self):
         # self.window.enable_windows()
         mouse.unhook_all()
-        keyboard.unhook(self.on_key_down)
+        keyboard.unhook_all()
         self.enabled = False
 
     def on_mouse_click(self, event):
@@ -81,9 +78,8 @@ class ScreenManager:
 
     def show_selector(self):
         if self.enabled:
-            self.close()
             self.window.show_selector_signal.emit()
-            self.release()
+            self.close()
 
     def delay(self):
         """
@@ -96,7 +92,6 @@ class ScreenManager:
         quit control indication process
         """
         self.window.quit_signal.emit()
-        self.release()
 
     def draw_rect(self):
         control = auto.ControlFromCursor()
@@ -107,18 +102,15 @@ class ScreenManager:
         if self.last_rect and self.last_rect == rect:
             return
         
-        self.invalidate_rect(self.last_rect)
-        self.draw_outline((240, 34, 19), 2, rect)
+        #self.invalidate_rect(self.last_rect)
+        self.draw_outline(rect)
         self.last_rect = rect
 
     def invalidate_rect(self, rect: Rect = None):
         if rect:
             rect = to_tuple(rect)
-            win32gui.InvalidateRect(self.hwnd, rect, False)
-            win32gui.UpdateWindow(self.hwnd)
-        else:
-            win32gui.InvalidateRect(self.hwnd, None, False)
-            win32gui.UpdateWindow(self.hwnd)
+        win32gui.InvalidateRect(self.hwnd, rect, True)
+        win32gui.UpdateWindow(self.hwnd)
 
     def prepare_countdown(self):
         self.countdown = 5
@@ -153,18 +145,31 @@ class ScreenManager:
     def create_window(self):
         self.hwnd = win32gui.CreateWindow(
             'Static', '',
-            WS_VISIBLE | WS_POPUP,
+            WS_VISIBLE | WS_POPUP | WS_DLGFRAME,
             *self.monitor,
             self.window.winId(), None, self.hinst, None
         )
         origin_proc = GetWindowLongPtr(self.hwnd, GWL_WNDPROC)
         def new_proc(hwnd: HWND, uMsg: int, wParam: int, lParam: int) -> int:
-            if uMsg == win32con.WM_MOUSEACTIVATE:
-                return win32con.MA_NOACTIVATEANDEAT
+            if uMsg == WM_MOUSEACTIVATE:
+                return MA_NOACTIVATEANDEAT
+            elif uMsg == WM_ERASEBKGND:
+                hdc = wParam
+                brush = win32gui.CreateSolidBrush(win32api.RGB(49, 120, 192)) 
+                rect = win32gui.GetClientRect(hwnd)
+                win32gui.FillRect(hdc, rect, brush)
+                return 1
+            elif uMsg == WM_PAINT:
+                hdc, paintStruct = win32gui.BeginPaint(hwnd)
+                rect = win32gui.GetClientRect(hwnd)
+                brush = win32gui.CreateSolidBrush(win32api.RGB(49, 120, 192))
+                win32gui.FillRect(hdc, rect, brush)
+                win32gui.EndPaint(hwnd, paintStruct)
+                return 0
             return win32gui.CallWindowProc(origin_proc, hwnd, uMsg, wParam, lParam)
         win32gui.SetWindowLong(self.hwnd, GWL_WNDPROC, WNDPROC(new_proc))
         win32gui.SetWindowLong(self.hwnd, GWL_EXSTYLE, WS_EX_TOPMOST | WS_EX_LAYERED)
-        win32gui.SetLayeredWindowAttributes(self.hwnd, 0, 75, LWA_ALPHA)
+        win32gui.SetLayeredWindowAttributes(self.hwnd, 0, 100, LWA_ALPHA)
         win32gui.RegisterHotKey(self.hwnd, 1, 0x4000, 0x71) # F2
         win32gui.RegisterHotKey(self.hwnd, 2, 0x4000, 0x1B) # ESC
         win32gui.RegisterHotKey(self.hwnd, 3, 0x4000, 0x0D) # ENTER
@@ -175,27 +180,22 @@ class ScreenManager:
         UnregisterHotKey(self.hwnd, 1)
         UnregisterHotKey(self.hwnd, 2)
         UnregisterHotKey(self.hwnd, 3)
+        win32gui.ReleaseCapture()
         win32gui.DestroyWindow(self.hwnd)
         self.hwnd = None
 
     def transfer_input(self):
         win32gui.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_HIDEWINDOW)
+        win32gui.ReleaseCapture()
 
     def block_input(self):
         win32gui.SetWindowPos(self.hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW)
+        win32gui.SetCapture(self.hwnd)
 
-    def draw_outline(self, color: Tuple, thickness: int, rect: Rect):
+    def draw_outline(self, rect: Rect):
         rect = to_tuple(rect)
-
-        self.dc = self.dc or win32gui.CreateDC('DISPLAY', None, None)
-        self.brush = self.brush or win32gui.CreateSolidBrush(win32api.RGB(*color))
-        win32gui.FrameRect(self.dc, rect, self.brush)
-
-    def release(self):
-        win32gui.DeleteObject(self.brush)
-        win32gui.DeleteDC(self.dc)
-        self.dc = None
-        self.brush = None
+        #win32gui.MoveWindow(self.hwnd, rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1], True)
+        win32gui.SetWindowPos(self.hwnd, HWND_TOPMOST, rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1], SWP_NOACTIVATE)
 
     def highlight(self, rect: Tuple):
         self.highlight_widget = QtWidgets.QWidget()
@@ -429,7 +429,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # manage screen 'delay' and 'quit' event
     def delay(self):
         self.screen_mgr.close()
-        self.screen_mgr.invalidate_rect()
+        #self.screen_mgr.invalidate_rect()
         self.screen_mgr.transfer_input()
         # QtCore.QTimer.singleShot(5000, self.screen_mgr.start)
         self.screen_mgr.prepare_countdown()
