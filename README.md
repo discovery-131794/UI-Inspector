@@ -8,7 +8,7 @@ Now, UI-Inspector supports most windows desktop applications which implemented u
 UI-Inspector can be installed from PYPI:
 
 ```sh
-pip install uiinspector
+pip install -U uiinspector
 ```
 then run command below:
 
