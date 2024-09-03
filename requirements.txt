@@ -1,0 +1,6 @@
+keyboard==0.13.5
+mouse==0.7.1
+pyjab>=1.1.5
+PySide6==6.3.0
+uiautomation>=2.0.16
+yapf==0.40.2
