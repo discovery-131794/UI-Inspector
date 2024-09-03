@@ -16,6 +16,15 @@ then run command below:
 ui-inspector
 ```
 
+or install dependencies:
+```sh
+pip install -r requirements.txt
+```
+then execute app.py:
+```sh
+python app.py
+```
+
 or you can use pyinstaller to build an executable.
 
 Download source code from git, enter into main directory and run command below:
